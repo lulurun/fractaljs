@@ -1,24 +1,24 @@
 F("main", F.Component.extend({
-  init: function(name, $container){
+  init: function(name, $container, env){
     var self = this;
-    self._super(name, $container);
+    self._super(name, $container, env);
     self.store = GetStore();
     self.store.onChange(function(){
       self.load();
     });
-    self.subscribe(Fractal.TOPIC.ENV_CHANGED, function(topic, data){
-      if (data.page) {
-        var filterString = F.env.page ? F.env.page.substring(1) : "";
-        self.filter = null;
-        if (filterString) {
-          self.filter = {
-            key: "completed",
-            value: (filterString == "completed"),
-          };
-        }
-        self.load();
+  },
+  onHashChanged: function(data) {
+    if (data.page) {
+      var filterString = F.query.page ? F.query.page.substring(1) : "";
+      self.filter = null;
+      if (filterString) {
+        self.filter = {
+          key: "completed",
+          value: (filterString == "completed"),
+        };
       }
-    });
+      self.load();
+    }
   },
   afterRender: function(callback){
     var self = this;

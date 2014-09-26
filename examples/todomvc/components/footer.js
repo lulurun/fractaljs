@@ -1,7 +1,7 @@
 Fractal("footer", Fractal.Component.extend({
-  init: function(name, $container){
+  init: function(name, $container, env){
     var self = this;
-    self._super(name, $container);
+    self._super(name, $container, env);
     self.store = GetStore();
     self.store.onChange(function(){
       self.load();
