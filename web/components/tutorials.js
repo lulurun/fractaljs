@@ -119,16 +119,12 @@ F(function(){
   }));
 
   F("tutorial_body", F.Component.extend({
-    init: function(name, $container) {
-      var self = this;
-      self._super(name, $container);
-      self.subscribe(F.TOPIC.ENV_CHANGED, function(topic, data){
-        if (data.name) self.load();
-      });
+    onHashChanged: function(data, from) {
+      if (data.name) this.load();
     },
     getData: function(cb) {
       var self = this;
-      var name = Fractal.env.name || tutorials[0].name;
+      var name = F.query.name || tutorials[0].name;
       var tutorial = tutorialByName[name];
       var basePath = tutorial.basePath || "tutorials/" + name + "/";
       var resultHeight = tutorial.resultHeight;
@@ -141,7 +137,7 @@ F(function(){
           active: fileName.split(".").pop() == "html"
         };
       });
-      F.require(files.map(function(v){ return v.url; }), {contentType: "text/plain"}, function(data){
+      self.require(files.map(function(v){ return v.url; }), {contentType: "text/plain"}, function(data){
         var lineNos = [];
         for (var i in data) lineNos.push(data[i].split("\n").length);
         files.forEach(function(v){

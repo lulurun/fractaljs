@@ -12,20 +12,16 @@
     <script type="text/javascript" src="src/fractal.js"></script>
     <script type="text/javascript" src="src/fractal.app.js"></script>
     <script>
-      var App = Fractal.App.extend({
-        init: function(){
-          this.PREFIX = {
-            component: "web/components/",
-            template: "web/templates/",
-          };
-          this.REQUIRE_LIST = [
-            "web/css/index.css",
-            "//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js",
-          ];
+      F.construct({
+        Prefix: {
+          Component: 'web/components/',
+          Template: 'web/templates/',
         },
+        Requires: [
+          "web/css/index.css",
+          "//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js",
+        ]
       });
-      var app = new App();
-      app.start();
     </script>
 
 <script>

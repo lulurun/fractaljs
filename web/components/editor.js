@@ -2,8 +2,9 @@ F("editor", F.Component.extend({
   KEY: "fractaljs-demo-jsonObject",
   afterRender: function(cb){
     var self = this;
-    F.require(["web/json_editor.js", "json_editor.tmpl"], function(data){
-      var editor = new JSONEditor(data["json_editor.tmpl"], $('#editor-container'));
+    var editorTemplate = 'web/templates/json_editor.tmpl';
+    self.require(["web/json_editor.js", editorTemplate], function(data){
+      var editor = new JSONEditor(data[editorTemplate], $('#editor-container'));
       editor.setData(self.jsonObject, null, {fields_editable: true});
 
       self.$("#btn-save").click(function(){
@@ -20,7 +21,7 @@ F("editor", F.Component.extend({
   },
   getData: function(cb){
     var self = this;
-    F.require("web/css/json_editor.css", function(){
+    self.require("web/css/json_editor.css", function(){
       var obj = localStorage.getItem(self.KEY);
       self.jsonObject = obj ? JSON.parse(obj) : { a: "a", b: { c: "c", d: "d"} };
       cb();

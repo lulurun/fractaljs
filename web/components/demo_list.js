@@ -18,7 +18,7 @@ F("demo", F.Component.extend({
     self.demoName = self.$container.data("demoname");
     var jsQuery = self.pathPrefix + "/components/" + self.demoName + ".js";
     var tmplQuery = self.pathPrefix + "/templates/" + self.demoName + ".tmpl";
-    F.require([jsQuery, tmplQuery], {contentType: "text/plain"}, function(data){
+    this.F.require([jsQuery, tmplQuery], {contentType: "text/plain"}, function(data){
       for (var i in data) { data[i] = data[i].trim(); }
       var rows = Math.min(
         Math.max(data[jsQuery].split("\n").length, data[tmplQuery].split("\n").length) + 1,

@@ -1,19 +1,23 @@
 F("main", F.Component.extend({}));
 
-F("body", F.Components.Router.extend({
-  knownPages: {
-    start: true,
-    doc: true,
-    examples: true,
-    tutorials: true,
-    home: true
-  },
-  getComponentName: function(changed, cb) {
-    var page = F.env.page || "home";
-    if (page in this.knownPages) cb(page);
-    else cb();
-  }
-}));
+F("body", function(env, cb) {
+  env.getComponentClass('Router', function(base){
+    cb(base.extend({
+      knownPages: {
+        start: true,
+        doc: true,
+        examples: true,
+        tutorials: true,
+        home: true
+      },
+      getComponentName: function(changed, cb) {
+        var page = F.query.page || "home";
+        if (page in this.knownPages) cb(page);
+        else cb();
+      }
+    }));
+  });
+});
 
 F("MarkDownDoc", F.Component.extend({
   getDocName: function() { return this.docName || this.name; },
@@ -42,8 +46,8 @@ F("MDBody", F.Component.extend({
     '<div class="btn-improve label label-info hide" ' +
     '  style="position:absolute;top:10px;right:10px;">improve me!</div>' +
     '</a>',
-  init: function(name, $container) {
-    this._super(name, $container);
+  init: function(name, $container, env) {
+    this._super(name, $container, env);
     this.$container.css("position", "relative");
   },
   afterRender: function(cb){
@@ -61,8 +65,8 @@ F("MDBody", F.Component.extend({
     var self = this;
     var name = self.$container.data("mdname");
     var md = "docs/" + name + ".md";
-    F.require(md, {contentType: "text/plain"}, function(data){
-      F.require("//cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js", function(){
+    self.require(md, {contentType: "text/plain"}, function(data){
+      self.require("//cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js", function(){
         var doc = marked(data);
         self.data = {
           doc: doc,
@@ -89,8 +93,8 @@ F("MDTableContents", F.Component.extend({
     var self = this;
     var name = self.$container.data("mdname");
     var md = "docs/" + name + ".md";
-    F.require(md, {contentType: "text/plain"}, function(data){
-      F.require("//cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js", function(){
+    self.require(md, {contentType: "text/plain"}, function(data){
+      self.require("//cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js", function(){
         var tokens = marked.lexer(data);
         var toc = { items: [], parent: null };
         var pToc = toc;

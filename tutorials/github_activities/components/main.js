@@ -1,10 +1,11 @@
 F("main", F.Component.extend({
-  init: function(name, $container) {
-    var self = this;
-    self._super(name, $container);
-    self.subscribe(self.name + ".load", function(topic, data){
-      self.load(data);
-    });
+  Public: {
+    'showActivities': function(){
+      this.load({componentName: 'github_activities2'});
+    },
+    'showProfile': function(userName){
+      this.load({componentName: 'github_profile', user: userName});
+    },
   },
   getData: function(cb, data) {
     var componentName = (data && data.componentName) || "github_activities2";

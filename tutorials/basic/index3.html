@@ -3,13 +3,11 @@
     <title>Fractal</title>
   </head>
   <body>
-    <div data-role="component" data-name="hello" load-once="true"></div>
-    <div data-role="component" data-name="world2" load-once="true"></div>
+    <span data-role="component" data-name="hello"></span>
+    <span data-role="component" data-name="world2"></span>
 
     <script type="text/javascript" src="../../src/fractal.js"></script>
     <script>
-      F.PREFIX.component = "components/";
-      F.PREFIX.template = "templates/";
       F.construct();
     </script>
   </body>

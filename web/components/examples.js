@@ -24,15 +24,11 @@ F(function(){
   }));
 
   F("example_body", F.Component.extend({
-    init: function(name, $container) {
-      var self = this;
-      self._super(name, $container);
-      self.subscribe(F.TOPIC.ENV_CHANGED, function(topic, data){
-        if (data.name) self.load();
-      });
+    onHashChanged: function(data){
+      if (data.name) this.load();
     },
     getData: function(cb) {
-      var exampleName = Fractal.env.name || examples[0].name;
+      var exampleName = F.query.name || examples[0].name;
       this.data = exampleByName[exampleName];
       cb();
     }

@@ -1,15 +1,10 @@
 F(function(){
   var KEY = "fractaljs-demo-loginName";
-  Fractal.TOPIC.LOAD_LOGIN = "load.login";
 
   F("login", F.Component.extend({
-    init: function(name, $container) {
-      var self = this;
-      self._super(name, $container);
-      self.subscribe(Fractal.TOPIC.LOAD_LOGIN, function(){
-        var name = localStorage.getItem(KEY);
-        self.load(name);
-      });
+    onLoginChanged: function(data){
+      var name = localStorage.getItem(KEY);
+      this.load(name);
     },
     getData: function(cb, param) {
       var name = param;
@@ -29,7 +24,7 @@ F(function(){
         var name = self.$("#input-name").val().trim();
         if (!name) return false;
         localStorage.setItem(KEY, name);
-        self.publish(Fractal.TOPIC.LOAD_LOGIN);
+        self.publish('LoginChanged');
         return false;
       });
       cb();
@@ -41,7 +36,7 @@ F(function(){
       var self = this;
       self.$("#btn-logout").click(function(){
         localStorage.removeItem(KEY);
-        self.publish(Fractal.TOPIC.LOAD_LOGIN);
+        self.publish('LoginChanged');
       });
       cb();
     }

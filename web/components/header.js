@@ -6,12 +6,8 @@ F("header", F.Component.extend({
     "?doc": "Doc",
     "https://github.com/gree/fractaljs": "Github",
   },
-  init: function(name, $container) {
-    var self = this;
-    self._super(name, $container);
-    self.subscribe(Fractal.TOPIC.ENV_CHANGED, function(topic, data){
-      if (data.page) self.load();
-    });
+  onHashChanged: function(data) {
+    if (data.page) self.load();
   },
   getData: function(cb){
     var menus = [];

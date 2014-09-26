@@ -8,7 +8,9 @@ F("github_zen", F.Component.extend({
   },
   getData: function(cb) {
     var self = this;
-    F.require("https://api.github.com/zen", {contentType: "application/vnd.github.VERSION.text+json"}, function(data){
+    var url = "https://api.github.com/zen";
+    var option = {contentType: "application/vnd.github.VERSION.text+json"};
+    self.require(url, option, function(data){
       self.data = { zen: data };
       cb();
     });
