@@ -29,7 +29,8 @@
     getData: function(callback) {
       callback({name: this.componentName});
     },
-    allLoaded: function(callback) {
+    loaded: function(callback) {
+      console.debug("loaded " + this.name);
       this.publish(this.name + ".loaded");
       callback();
     }
