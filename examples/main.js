@@ -1,5 +1,3 @@
-define(function(){
-  return F.component({
-    DefaultComponent: "examples",
-  }, F.spa.Router);
-});
+F.define({
+  DefaultComponent: "examples",
+}, F.spa.Router);

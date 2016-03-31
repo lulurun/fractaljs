@@ -1,144 +1,112 @@
-(function(){
-  F.History = (typeof(window.History) === "object") ? window.History : window.history;
+(function(global){
+  F.History = (typeof(global.History) === "object") ? global.History : global.history;
   if (!F.History) {
     console.error("history support is not found, I am not fully working");
   }
 
-  var spa = F.spa = {};
+  var _dec = function(s){ return decodeURIComponent(s.replace(/\+/g, " ")); };
 
-  spa.Router = F.ComponentBase.extend({
+  var spa = F.spa = {};
+  var decodeParam = spa.decodeParam = function(queryString){
+    if (!queryString) return {};
+    var a = queryString.split("?");
+    var component = a[0];
+    var params = {};
+    if (a[1]) {
+      var parts = a[1].split("&");
+      parts.forEach(function(v){
+        var kv = v.split("=");
+        params[_dec(kv[0])] = kv[1] ? _dec(kv[1]) : null;
+      });
+    }
+    return {
+      component: component,
+      params: params,
+    };
+  };
+
+  var encodeParam = spa.encodeParam = function(component, params) {
+    queryString = component || "";
+    var kvp = [];
+    for (var k in params) kvp.push([k, params[k] || ""]);
+    var paramString = kvp.map(function(v){
+      return encodeURIComponent(v[0]) + "=" + encodeURIComponent(v[1]);
+    }).join("&");
+    if (paramString) queryString += "?" + paramString;
+    return queryString;
+  };
+
+  spa.Router = F.component({
     template: '{{#name}}<div f-component="{{name}}" />{{/name}}',
-    init: function(name, $container, f) {
+    init: function(name, $container) {
       var self = this;
-      self._super(name, $container, f);
+      self._super(name, $container);
       if (!self.DefaultComponent) {
         throw new Error(self.name + ": DefaultComponent is not defined in subclass");
       }
-      self.subscribe("spa.component.changed", function(topic, componentName){
-        console.debug(self.name, "received", topic, componentName);
-        componentName = componentName || self.DefaultComponent;
-        console.debug(self.name, "componentName:", componentName,
-                      "self.componentName:", self.componentName);
-        if (self.componentName !== componentName) {
-          self.componentName = componentName;
+      self.subscribe("spa.component.changed", function(topic, component){
+        component = component || self.DefaultComponent;
+        if (self._current !== component) {
+          self._current = component;
           self.load();
         }
       });
-      self.componentName = spa.component || self.DefaultComponent;
+      self._current = spa.component || self.DefaultComponent;
     },
-    getData: function(callback) {
-      callback({name: this.componentName});
+    getData: function(cb) {
+      cb({name: this._current});
     },
-    loaded: function(callback) {
-      console.debug("loaded " + this.name);
-      this.publish(this.name + ".loaded");
-      callback();
-    }
   });
 
-  (function(){
-    var _dec = function(s){ return decodeURIComponent(s.replace(/\+/g, " ")); };
+  spa.navigate = function(component, params) {
+    var url = "/#" + encodeParam(component, params);
+    if (url !== location.href) { // TODO
+      parseUrl(url);
+      F.History.pushState("", "", url);
+    }
+  };
 
-    var decodeParam = spa.decodeParam = function(queryString){
-      if (!queryString) return {};
-      var a = queryString.split("?");
-      var component = a[0];
-      var params = {};
-      if (a[1]) {
-        var parts = a[1].split("&");
-        parts.forEach(function(v){
-          var kv = v.split("=");
-          params[_dec(kv[0])] = kv[1] ? _dec(kv[1]) : null;
-        });
+  var query = spa.query = {};
+  spa.component = "";
+
+  var parseUrl = function(url) {
+    var parts = url.split("#");
+    var queryString = parts[1];
+    var decoded = decodeParam(queryString);
+    var params = decoded.params || {};
+    var isChanged = false;
+    var changed = {};
+    for (var k in params) {
+      v = params[k];
+      if (query[k] !== v) {
+        changed[k] = [query[k], v];
+        isChanged = true;
       }
-
-      return {
-        component: component,
-        params: params,
-      };
-    };
-
-    var encodeParam = spa.encodeParam = function(component, params) {
-      queryString = component || "";
-      paramString = (function(params) {
-        var kvp = [];
-        for (var k in params)
-          kvp.push([k, params[k] || ""]);
-
-        return kvp.map(function(v){
-          return encodeURIComponent(v[0]) + "=" + encodeURIComponent(v[1]);
-        }).join("&");
-      })(params);
-
-      if (paramString) {
-        queryString += "?" + paramString;
+      query[k] = v;
+    }
+    var removeList = [];
+    for (var k in query) {
+      if (!(k in params)) {
+        changed[k] = [query[k], undefined];
+        removeList.push(k);
+        isChanged = true;
       }
+    }
+    removeList.forEach(function(v){ delete query[v]; });
 
-      return queryString;
-    };
+    if (spa.component !== decoded.component) {
+      spa.component = decoded.component;
+      F.PubSub.publish("spa.component.changed", decoded.component);
+    }
 
-    var query = spa.query = {};
+    if (isChanged) {
+      F.PubSub.publish("spa.query.changed", changed);
+    }
+  };
 
-    var parseUrl = function(url) {
-      var parts = url.split("#");
-      queryString = parts[1];
-      var decoded = decodeParam(queryString);
-      var params = decoded.params || {};
-      var isChanged = false;
-      var changed = {};
-      for (var k in params) {
-        v = params[k];
-        if (query[k] !== v) {
-          changed[k] = [query[k], v];
-          isChanged = true;
-        }
-        query[k] = v;
-      }
-      var removeList = [];
-      for (var k in query) {
-        if (!(k in params)) {
-          changed[k] = [query[k], undefined];
-          removeList.push(k);
-          isChanged = true;
-        }
-      }
-      removeList.forEach(function(v){ delete query[v]; });
-
-      if (spa.component !== decoded.component) {
-        spa.component = decoded.component;
-        F.Pubsub.publish("spa.component.changed", decoded.component);
-      }
-
-      if (isChanged) {
-        F.Pubsub.publish("spa.query.changed", changed);
-      }
-    };
-
-    spa.navigate = function(component, params) {
-      var url = "/#" + encodeParam(component, params);
-      if (url !== location.href) { // TODO
-        parseUrl(url);
-        F.History.pushState("", "", url);
-      }
-    };
-
-    window.onpopstate = function(e, a, b){
-      console.debug("popState", e, a, b)
-      parseUrl(location.href);
-    };
-
+  global.onpopstate = function(e, a, b){
     parseUrl(location.href);
-  })();
+  };
 
-  spa.platform = (function(){
-    if (location.href.indexOf("http") == 0) return "www";
-    var isAndroid = !!(navigator.userAgent.match(/Android/i));
-    var isIOS     = !!(navigator.userAgent.match(/iPhone|iPad|iPod/i));
-
-    if (isAndroid) return "android";
-    else if (isIOS) return "ios";
-    else return "www";
-  })();
-
-})();
-
+  parseUrl(location.href);
+})(window);
