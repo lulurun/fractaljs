@@ -91,7 +91,14 @@
         }, param);
       }, param);
     },
-    getData: _noImpl,
+    getData: function(cb, param) {
+      var self = this;
+      if (typeof(self.data) === "function") {
+        self.data(cb, param);
+      } else {
+        cb(self.data);
+      }
+    },
     getTemplate: function(cb, param) {
       var self = this;
       if (self.template) {
@@ -119,7 +126,7 @@
       for (var i=0; i<len; i++) {
         (function($container){
           var name = $container.attr(COMPONENT_ATTR);
-          require(['components/' + name], function(component){
+          F.require(name, function(component){
             var instance = new component(name, $container);
             instance.load(param, function(){
               if (++complete == len) cb()
@@ -150,13 +157,29 @@
     TE: Hogan,
     PubSub: PubSub,
     all: {},
-    define: function(object, base) { // syntactic sugar for defining a component
+    _components: {},
+    BaseComponent: Component,
+    define: function(name, object, base) { // syntactic sugar for defining a component
+      if (typeof define === 'function' && define.amd){
       define(function(){
-        return F.component(object, base);
+        return F.component(name, object, base);
       });
+      } else {
+        F.component(name, object, base);
+      }
     },
-    component: function(object, base){
-      return (base || Component).extend(object || {});
+    require: function(name, cb) {
+      var c = F._components[name];
+      if (c) {
+        cb(c);
+      } else {
+        require(['components/' + name], cb);
+      }
+    },
+    component: function(name, object, base){
+      var c = (base || Component).extend(object || {});
+      F._components[name] = c;
+      return c;
     },
     compile: function(text) { return F.TE.compile(text) },
     render: function(template, data, options) { return template.render(data, options); },

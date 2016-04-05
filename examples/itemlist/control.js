@@ -1,6 +1,6 @@
-define(["itemlist/item_store.js"], function(items){
+define(["itemlist/store.js"], function(items){
   var candidates = ["d", "e", "f"];
-  return F.component({
+  return F.component("itemlist/control", {
     afterRender: function(cb){
       var self = this;
       self.$('button').click(function(){

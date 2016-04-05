@@ -1,5 +1,5 @@
-define(["itemlist/item_store.js"], function(items){
-  return F.component({
+define(["itemlist/store.js"], function(items){
+  return F.component("itemlist/body", {
     init: function(name, $container){
       var self = this;
       self._super(name, $container);

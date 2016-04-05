@@ -4,10 +4,10 @@ define(function(){
     "itemlist",
   ];
 
-  return F.component({
+  return F.component("examples", {
     getData: function(cb) {
       var data = examples.map(function(v){
-        return { href: "#" + v + "/" + v, name: v }
+        return { href: "#" + v + "/main", name: v }
       });
       cb({ examples: data });
     }

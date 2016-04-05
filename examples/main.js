@@ -1,3 +1,3 @@
-F.define({
+F.define("main", {
   DefaultComponent: "examples",
-}, F.spa.Router);
+}, F.Router);

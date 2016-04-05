@@ -1,5 +1,5 @@
-define(["itemlist/item_store.js"], function(items){
-  return F.component({
+define(["itemlist/store.js"], function(items){
+  return F.component("itemlist/item", {
     afterRender: function(cb) {
       var self = this;
       self.$('button').click(function(){
