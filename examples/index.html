@@ -1,27 +1,12 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>FractalJS App</title>
-  </head>
   <body>
+    <div f-component="list"></div>
+
     <div f-component="main"></div>
 
-    <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
-    <script type="text/javascript" src="bower_components/hogan.js/web/builds/3.0.2/hogan-3.0.2.min.js"></script>
-    <script type="text/javascript" src="bower_components/PubSubJS/src/pubsub.js"></script>
-    <script type="text/javascript" src="../src/fractal.js"></script>
-    <script type="text/javascript" src="../src/fractal-router.js"></script>
-    <script type="text/javascript" src="bower_components/requirejs/require.js"></script>
-    <script type="text/javascript">
-      requirejs.config({
-        paths: {
-          components: '.',
-          templates: '.',
-          text: 'bower_components/text/text',
-        },
-      });
-      F.build();
-    </script>
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../node_modules/mustache/mustache.min.js"></script>
+    <script src="bundle.js"></script>
   </body>
 </html>
-

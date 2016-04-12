@@ -1,6 +1,6 @@
-import F from '../src/index'
-import './button.css'
-import template from './button.html'
+import F from '../../dist/fractal.es6'
+import '../template/button.css'
+import template from '../template/button.html'
 
 let link = "google.com";
 

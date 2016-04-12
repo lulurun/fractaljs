@@ -1,7 +1,5 @@
 import Component from './component'
 
-
-
 export default {
   component: api.component,
   build: function($el, cb){

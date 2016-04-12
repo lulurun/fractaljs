@@ -3,6 +3,7 @@ import Config from './config'
 
 const COMPONENT_ATTR = 'f-component'
 let knownComponents = {};
+let knownTemplates = {};
 
 export const Component = Class.extend({
   init: function(name, $container) {
@@ -11,7 +12,11 @@ export const Component = Class.extend({
     this.complete = false;
     this.subTokens = {};
     this.$ = this.$container.find.bind(this.$container);
-    this.$container.on("destroyed", this.destroyed.bind(this));
+    this.$container.on('destroyed', this.destroyed.bind(this));
+
+    if (!this.template) {
+      this.template = getTemplate(this.templateName || this.name);
+    }
   },
   getData: function(cb, param) {
     if (this.data && typeof(this.data) === 'function') this.data(cb, param);
@@ -34,7 +39,7 @@ export const Component = Class.extend({
   // main entry
   load: function(param, cb) {
     param = param || {};
-    console.time("Component." + this.name);
+    console.time('Component.' + this.name);
     this.complete = false;
     this.getData(data => {
       this.render(data, this.template, () => {
@@ -42,7 +47,7 @@ export const Component = Class.extend({
         this.loadChildren(() => {
           this.complete = true;
           this.loaded(() => {
-            console.timeEnd("Component." + this.name);
+            console.timeEnd('Component.' + this.name);
             this.$container.removeAttr(COMPONENT_ATTR);
           }, param)
         }, param)
@@ -59,19 +64,50 @@ export const Component = Class.extend({
 });
 
 export function build($root, param, cb){
-  let els = $root.find("[" + COMPONENT_ATTR + "]");
+  let els = $root.find('[' + COMPONENT_ATTR + ']');
   if (!els.length) return cb();
 
   let complete = 0;
   els.each((i, el) => {
     let $container = $(el);
     let name = $container.attr(COMPONENT_ATTR);
-    let Class = knownComponents[name] || Component;
+    let Class = getComponent(name);
     let c = new Class(name, $container);
     c.load(param, () => {
       if (++complete === len) cb();
     });
   });
+}
+
+function getTemplate(name) {
+  if (name in knownTemplates){
+    return knownTemplates[name];
+  } else if (require && typeof(require) === 'function') {
+    let template = require(name);
+    if (template) {
+      if (Config.compile) {
+        template = Config.compile(template);
+      }
+      knownTemplates[name] = template;
+      return template;
+    }
+  }
+  console.error("Template not found: " + name);
+  return "";
+}
+
+function getComponent(name) {
+  if (name in knownComponents) {
+    return knownComponents[name];
+  } else if (require && typeof(require) === 'function') {
+    let Class = require(name);
+    if (Class) {
+      knownComponents[name] = Class;
+      return Class;
+    }
+  }
+  console.error("Component not found: " + name);
+  return Component;
 }
 
 export function define(name, props, base) {

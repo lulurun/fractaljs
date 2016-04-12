@@ -1,1 +1,0 @@
-F.define("itemlist/main");

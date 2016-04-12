@@ -1,6 +1,6 @@
 import 'marked'
-import F from '../src/index'
-import template from './markdown.html'
+import F from '../../dist/fractal.es6'
+import template from '../template/markdown.html'
 
 export default F.component("markdown", {
   template: template,
