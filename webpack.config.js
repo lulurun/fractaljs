@@ -1,4 +1,3 @@
-var path = require('path')
 var webpack = require('webpack')
 
 module.exports = {
@@ -9,7 +8,7 @@ module.exports = {
   },
   module: {
     loaders: [
-      //{ test: /\.js$/, loader: 'babel' },
+      { test: /\.js$/, loader: 'babel' },
       { test: /\.html$/, loader: 'html' },
       { test: /\.css$/, loader: "style!css" },
     ]
@@ -17,11 +16,11 @@ module.exports = {
   babel: {
   },
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: '"development"'
-      }
-    })
+    // new webpack.DefinePlugin({
+    //   'process.env': {
+    //     NODE_ENV: '"development"'
+    //   }
+    // })
   ],
   devtool: 'source-map'
 }

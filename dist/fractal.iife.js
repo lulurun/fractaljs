@@ -1,8 +1,5 @@
-(function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-  typeof define === 'function' && define.amd ? define(factory) :
-  (global.F = factory());
-}(this, function () { 'use strict';
+var F = (function () {
+  'use strict';
 
   /* Simple JavaScript Inheritance
    * By John Resig http://ejohn.org/
@@ -92,7 +89,11 @@
       return text;
     },
     render: function render(template, data) {},
-    Pubsub: Pubsub
+    Pubsub: Pubsub,
+    require: {
+      // component: require.context('./component', false, /^\.\/.*\.js$/),
+      // template: require.context('./template', false, /^\.\/.*\.html$/),
+    }
   };
 
   var COMPONENT_ATTR = 'f-component';
@@ -179,8 +180,8 @@
   function getTemplate(name) {
     if (name in knownTemplates) {
       return knownTemplates[name];
-    } else if (require && typeof require === 'function') {
-      var template = require(name);
+    } else {
+      var template = Config.require.component(name);
       if (template) {
         if (Config.compile) {
           template = Config.compile(template);
@@ -196,8 +197,8 @@
   function getComponent(name) {
     if (name in knownComponents) {
       return knownComponents[name];
-    } else if (require && typeof require === 'function') {
-      var _Class = require(name);
+    } else {
+      var _Class = Config.require.template('html!' + name);
       if (_Class) {
         knownComponents[name] = _Class;
         return _Class;
@@ -262,5 +263,5 @@
 
   return index;
 
-}));
-//# sourceMappingURL=fractal.umd.js.map
+}());
+//# sourceMappingURL=fractal.iife.js.map

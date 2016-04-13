@@ -2,7 +2,7 @@ var path = require('path')
 var webpack = require('webpack')
 
 module.exports = {
-  entry: ['./fractal.js', './index.js'],
+  entry: ['./index.js'],
   output: {
     filename: 'bundle.js',
     libraryTarget: 'umd'

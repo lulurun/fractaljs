@@ -82,8 +82,8 @@ export function build($root, param, cb){
 function getTemplate(name) {
   if (name in knownTemplates){
     return knownTemplates[name];
-  } else if (require && typeof(require) === 'function') {
-    let template = require(name);
+  } else {
+    let template = Config.require.component(name);
     if (template) {
       if (Config.compile) {
         template = Config.compile(template);
@@ -99,8 +99,8 @@ function getTemplate(name) {
 function getComponent(name) {
   if (name in knownComponents) {
     return knownComponents[name];
-  } else if (require && typeof(require) === 'function') {
-    let Class = require(name);
+  } else {
+    let Class = Config.require.template('html!' + name);
     if (Class) {
       knownComponents[name] = Class;
       return Class;

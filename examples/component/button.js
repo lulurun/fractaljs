@@ -1,10 +1,9 @@
-import F from '../../dist/fractal.es6'
-import '../template/button.css'
-import template from '../template/button.html'
+require('../template/button.css')
+require('../template/button.html')
 
 let link = "google.com";
 
-export default F.component("button", {
+module.exports = F.component("button", {
   template: template,
   init: function(name, $container) {
     this._super(name, $container);

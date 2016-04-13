@@ -1,8 +1,6 @@
-import 'marked'
-import F from '../../dist/fractal.es6'
-import template from '../template/markdown.html'
+require('marked')
 
-export default F.component("markdown", {
+module.exports = F.component("markdown", {
   template: template,
   rendered: function() {
     var doc = marked(this.mdData);

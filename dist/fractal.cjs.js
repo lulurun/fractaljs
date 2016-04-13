@@ -88,7 +88,11 @@ var Config = {
     return text;
   },
   render: function render(template, data) {},
-  Pubsub: Pubsub
+  Pubsub: Pubsub,
+  require: {
+    // component: require.context('./component', false, /^\.\/.*\.js$/),
+    // template: require.context('./template', false, /^\.\/.*\.html$/),
+  }
 };
 
 var COMPONENT_ATTR = 'f-component';
@@ -175,8 +179,8 @@ function build($root, param, cb) {
 function getTemplate(name) {
   if (name in knownTemplates) {
     return knownTemplates[name];
-  } else if (require && typeof require === 'function') {
-    var template = require(name);
+  } else {
+    var template = Config.require.component(name);
     if (template) {
       if (Config.compile) {
         template = Config.compile(template);
@@ -192,8 +196,8 @@ function getTemplate(name) {
 function getComponent(name) {
   if (name in knownComponents) {
     return knownComponents[name];
-  } else if (require && typeof require === 'function') {
-    var _Class = require(name);
+  } else {
+    var _Class = Config.require.template('html!' + name);
     if (_Class) {
       knownComponents[name] = _Class;
       return _Class;

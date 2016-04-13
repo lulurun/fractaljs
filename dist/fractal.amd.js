@@ -1,8 +1,4 @@
-(function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-  typeof define === 'function' && define.amd ? define(factory) :
-  (global.F = factory());
-}(this, function () { 'use strict';
+define(function () { 'use strict';
 
   /* Simple JavaScript Inheritance
    * By John Resig http://ejohn.org/
@@ -266,5 +262,5 @@
 
   return index;
 
-}));
-//# sourceMappingURL=fractal.umd.js.map
+});
+//# sourceMappingURL=fractal.amd.js.map
