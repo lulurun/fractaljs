@@ -5,26 +5,28 @@
   "main": "dist/fractal.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node build"
+    "build": "node build.js",
+    "examples": "node build.js; cd examples; webpack"
   },
   "keywords": [
     "component",
-    "es2015", "es6",
+    "es2015",
+    "es6",
     "framework"
   ],
   "author": "lulurun@gmail.com",
   "license": "MIT",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
-    "jquery": "^2.2.3",
-    "mustache": "^2.2.1",
     "babel-cli": "^6.6.5",
     "babel-core": "^6.7.4",
     "babel-loader": "^6.2.4",
+    "babel-plugin-add-module-exports": "^0.1.2",
     "babel-preset-es2015-rollup": "^1.1.1",
     "css-loader": "^0.23.1",
     "html-loader": "^0.4.3",
+    "jquery": "^2.2.3",
+    "mustache": "^2.2.1",
     "node-sass": "^3.4.2",
     "rollup": "^0.25.8",
     "rollup-plugin-babel": "^2.4.0",

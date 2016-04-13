@@ -1,10 +1,8 @@
 require('../template/button.css')
-require('../template/button.html')
+const link = "google.com";
 
-let link = "google.com";
-
-module.exports = F.component("button", {
-  template: template,
+export default F.component("button", {
+  template: require('../template/button.html'),
   init: function(name, $container) {
     this._super(name, $container);
   },

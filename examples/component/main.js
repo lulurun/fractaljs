@@ -1,4 +1,4 @@
-module.exports = F.component('main', {
+export default F.component('main', {
   DefaultComponent: 'list',
 }, F.Router);
 

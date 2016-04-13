@@ -5,4 +5,6 @@ node_modules
 .DS_Store
 __generated__/
 bower_components
-
+examples/bundle.js
+examples/bundle.js.map
+*.log

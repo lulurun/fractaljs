@@ -83,7 +83,7 @@ function getTemplate(name) {
   if (name in knownTemplates){
     return knownTemplates[name];
   } else {
-    let template = Config.require.component(name);
+    let template = Config.require.template("./" + name + ".html");
     if (template) {
       if (Config.compile) {
         template = Config.compile(template);
@@ -100,7 +100,7 @@ function getComponent(name) {
   if (name in knownComponents) {
     return knownComponents[name];
   } else {
-    let Class = Config.require.template('html!' + name);
+    let Class = Config.require.component("./" + name);
     if (Class) {
       knownComponents[name] = Class;
       return Class;

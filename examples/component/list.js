@@ -5,7 +5,7 @@ let examples = [
   "button",
 ];
 
-module.exports = F.component('list', {
+export default F.component('list', {
   template: template,
   data: examples.map(v => {
     return { href: "#" + v, name: v }
