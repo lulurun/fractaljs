@@ -15,5 +15,6 @@ export default {
       if (cb) cb();
     });
   },
+  Pubsub: Config.Pubsub,
 }
 

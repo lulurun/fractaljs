@@ -10,7 +10,7 @@ rollup.rollup({
   entry: 'src/index.js',
   plugins: plugins,
 }).then(function (bundle) {
-  ['amd', 'iife', 'umd', 'cjs', 'es6'].forEach(v => {
+  ['umd', 'cjs'].forEach(v => {
     bundle.write({
       format: v,
       dest: 'dist/fractal.' + v + '.js',

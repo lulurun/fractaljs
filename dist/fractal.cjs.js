@@ -180,7 +180,7 @@ function getTemplate(name) {
   if (name in knownTemplates) {
     return knownTemplates[name];
   } else {
-    var template = Config.require.component(name);
+    var template = Config.require.template("./" + name + ".html");
     if (template) {
       if (Config.compile) {
         template = Config.compile(template);
@@ -197,7 +197,7 @@ function getComponent(name) {
   if (name in knownComponents) {
     return knownComponents[name];
   } else {
-    var _Class = Config.require.template('html!' + name);
+    var _Class = Config.require.component("./" + name);
     if (_Class) {
       knownComponents[name] = _Class;
       return _Class;
@@ -257,7 +257,8 @@ var index = {
     build($root, {}, function () {
       if (cb) cb();
     });
-  }
+  },
+  Pubsub: Config.Pubsub
 };
 
 module.exports = index;
