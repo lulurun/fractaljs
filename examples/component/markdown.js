@@ -1,7 +1,6 @@
-require('marked')
+var marked = require('marked')
 
-module.exports = F.component("markdown", {
-  template: template,
+export default F.component("markdown", {
   rendered: function() {
     var doc = marked(this.mdData);
     this.$("#marked").html(doc);

@@ -11,9 +11,11 @@ rollup.rollup({
   plugins: plugins,
 }).then(function (bundle) {
   ['umd', 'cjs'].forEach(v => {
+    var file = 'dist/fractal.' + v + '.js';
+    console.log(file);
     bundle.write({
       format: v,
-      dest: 'dist/fractal.' + v + '.js',
+      dest: file,
       moduleName: "F",
       sourceMap: true,
     });
