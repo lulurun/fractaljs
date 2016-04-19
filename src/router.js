@@ -21,7 +21,7 @@ export default Component.extend({
       }
     });
   },
-  data: function(cb, param) {
+  getData: function(cb, param) {
     cb({
       name: this.current || this.DefaultComponent
     });

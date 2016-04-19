@@ -1,11 +1,16 @@
 import Pubsub from './pubsub'
 
 export default {
-  compile: function(text) { return text; },
+  $: null,
+  compile: null,
   render: function(template, data) {},
   Pubsub: Pubsub,
   require: {
-    // component: require.context('./component', false, /^\.\/.*\.js$/),
-    // template: require.context('./template', false, /^\.\/.*\.html$/),
+    component: function(){
+      throw new Error('to be defined: require.component');
+    },
+    template: function(){
+      throw new Error('to be defined: require.template');
+    },
   },
 }

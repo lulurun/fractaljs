@@ -1,4 +1,5 @@
-var marked = require('marked')
+var $ = require('jquery');
+var marked = require('marked');
 
 export default F.component("markdown", {
   rendered: function() {

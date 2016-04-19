@@ -9,6 +9,16 @@ export default {
     for (let k in Config) {
       if (options[k]) Config[k] = options[k];
     }
+
+    if (options.$) {
+      options.$.event.special.destroyed = {
+        remove: function(o) {
+          if (o.handler) {
+            o.handler()
+          }
+        }
+      }
+    }
   },
   build: function($root, cb) {
     build($root, {}, function(){

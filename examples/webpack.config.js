@@ -5,23 +5,29 @@ module.exports = {
   entry: ['./index.js'],
   output: {
     filename: 'bundle.js',
+    publicPath: '/examples/',
     libraryTarget: 'umd'
   },
   module: {
     loaders: [
-      { test: /\.js$/, loader: 'babel' },
+      {
+        test: /\.js$/,
+        loader: 'babel',
+        query: {compact: false},
+        exclude: /node_modules/,
+      },
       { test: /\.html$/, loader: 'html' },
       { test: /\.css$/, loader: "style!css" },
     ]
   },
-  babel: {
+  babel: {},
+  resolve: {
+    root: [ path.join(__dirname, "bower_components") ],
   },
   plugins: [
-    // new webpack.DefinePlugin({
-    //   'process.env': {
-    //     NODE_ENV: '"development"'
-    //   }
-    // })
+    new webpack.ProvidePlugin({
+      F: __dirname + "/../dist/fractal.cjs.js",
+    })
   ],
   devtool: 'source-map'
 }

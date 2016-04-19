@@ -88,20 +88,21 @@
   };
 
   var Config = {
-    compile: function compile(text) {
-      return text;
-    },
+    $: null,
+    compile: null,
     render: function render(template, data) {},
     Pubsub: Pubsub,
     require: {
-      // component: require.context('./component', false, /^\.\/.*\.js$/),
-      // template: require.context('./template', false, /^\.\/.*\.html$/),
+      component: function component() {
+        throw new Error('to be defined: require.component');
+      },
+      template: function template() {
+        throw new Error('to be defined: require.template');
+      }
     }
   };
 
   var COMPONENT_ATTR = 'f-component';
-  var knownComponents = {};
-  var knownTemplates = {};
 
   var Component = Class.extend({
     init: function init(name, $container) {
@@ -117,20 +118,18 @@
       }
     },
     getData: function getData(cb, param) {
-      if (this.data && typeof this.data === 'function') this.data(cb, param);else cb(this.data || {});
+      cb(this.data || {});
     },
-    render: function render(data, template, cb, param) {
+    render: function render(data, template, param) {
       this.$container.html(Config.render(template, data));
-      cb();
     },
     rendered: function rendered(param) {},
     loadChildren: function loadChildren(cb, param) {
       build(this.$container, param, cb);
     },
-    loaded: function loaded(cb, param) {
-      cb();
-    },
+    loaded: function loaded(param) {},
     destroyed: function destroyed(param) {
+      console.debug(this.name, "destroyed");
       for (var topic in this.subTokens) {
         Config.Pubsub.unsubscribe(this.subTokens[topic]);
       }
@@ -143,15 +142,13 @@
       console.time('Component.' + this.name);
       this.complete = false;
       this.getData(function (data) {
-        _this.render(data, _this.template, function () {
-          _this.rendered(param);
-          _this.loadChildren(function () {
-            _this.complete = true;
-            _this.loaded(function () {
-              console.timeEnd('Component.' + _this.name);
-              _this.$container.removeAttr(COMPONENT_ATTR);
-            }, param);
-          }, param);
+        _this.render(data, _this.template, param);
+        _this.rendered(param);
+        _this.loadChildren(function () {
+          _this.complete = true;
+          console.timeEnd('Component.' + _this.name);
+          _this.loaded(param);
+          _this.$container.removeAttr(COMPONENT_ATTR);
         }, param);
       }, param);
     },
@@ -170,7 +167,7 @@
 
     var complete = 0;
     els.each(function (i, el) {
-      var $container = $(el);
+      var $container = Config.$(el);
       var name = $container.attr(COMPONENT_ATTR);
       var Class = getComponent(name);
       var c = new Class(name, $container);
@@ -181,31 +178,22 @@
   }
 
   function getTemplate(name) {
-    if (name in knownTemplates) {
-      return knownTemplates[name];
-    } else {
-      var template = Config.require.template("./" + name + ".html");
-      if (template) {
-        if (Config.compile) {
-          template = Config.compile(template);
-        }
-        knownTemplates[name] = template;
-        return template;
+    var template = Config.require.template("./" + name + ".html");
+    if (template) {
+      if (Config.compile) {
+        template = Config.compile(template);
       }
+      return template;
     }
     console.error("Template not found: " + name);
     return "";
   }
 
   function getComponent(name) {
-    if (name in knownComponents) {
-      return knownComponents[name];
-    } else {
-      var _Class = Config.require.component("./" + name);
-      if (_Class) {
-        knownComponents[name] = _Class;
-        return _Class;
-      }
+    var Class = Config.require.component("./" + name);
+    if (Class) {
+      // knownComponents[name] = Class;
+      return Class;
     }
     console.error("Component not found: " + name);
     return Component;
@@ -213,7 +201,7 @@
 
   function define(name, props, base) {
     var c = (base || Component).extend(props || {});
-    knownComponents[name] = c;
+    // knownComponents[name] = c;
     return c;
   }
 
@@ -238,7 +226,7 @@
         }
       });
     },
-    data: function data(cb, param) {
+    getData: function getData(cb, param) {
       cb({
         name: this.current || this.DefaultComponent
       });
@@ -255,6 +243,16 @@
     init: function init(options) {
       for (var k in Config) {
         if (options[k]) Config[k] = options[k];
+      }
+
+      if (options.$) {
+        options.$.event.special.destroyed = {
+          remove: function remove(o) {
+            if (o.handler) {
+              o.handler();
+            }
+          }
+        };
       }
     },
     build: function build$$($root, cb) {
