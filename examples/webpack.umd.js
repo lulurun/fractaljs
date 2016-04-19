@@ -2,9 +2,9 @@ var path = require('path')
 var webpack = require('webpack')
 
 module.exports = {
-  entry: ['./index.js'],
+  entry: ['./index.umd.js'],
   output: {
-    filename: 'bundle.js',
+    filename: 'bundle.umd.js',
     publicPath: '/examples/',
     libraryTarget: 'umd'
   },
@@ -24,11 +24,6 @@ module.exports = {
   resolve: {
     root: [ path.join(__dirname, "bower_components") ],
   },
-  plugins: [
-    new webpack.ProvidePlugin({
-      F: __dirname + "/../dist/fractal.cjs.js",
-    })
-  ],
   devtool: 'source-map'
 }
 

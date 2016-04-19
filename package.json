@@ -5,7 +5,10 @@
   "main": "dist/fractal.cjs.js",
   "scripts": {
     "build": "node build.js",
-    "build-examples": "node build.js; cd examples; webpack"
+    "build-all": "npm run build; npm run build-examples",
+    "build-examples": "npm run webpack-umd; npm run webpack-cjs",
+    "webpack-umd": "pushd ./examples; webpack --config webpack.umd.js",
+    "webpack-cjs": "pushd ./examples; webpack --config webpack.cjs.js"
   },
   "keywords": [
     "component",
