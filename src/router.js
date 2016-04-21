@@ -1,18 +1,15 @@
-import {Component} from './component'
-import Config from './config'
-
-const _RE = /^#([0-9a-zA-Z_\-\/\.]+)/
+const _RE = /^#([0-9a-zA-Z_\-\/\.]+)/;
 let getComponentName = function(hash) {
   let match = _RE.exec(hash);
   return (match && match[1]) || "";
 };
 
-export default Component.extend({
+export default F.component(null, {
   template: '{{#name}}<div f-component="{{name}}" />{{/name}}' +
     '{{^name}}`DefaultComponent` is not defined{{/name}}',
   current: getComponentName(location.hash),
-  init: function(name, $container) {
-    this._super(name, $container);
+  init: function(name, el, parent) {
+    this._super(name, el, parent);
     this.subscribe("onpopstate", (topic, hash) => {
       let component = getComponentName(hash);
       if (this.current != component) {
@@ -29,6 +26,6 @@ export default Component.extend({
 });
 
 window.onpopstate = function(){
-  Config.Pubsub.publish("onpopstate", location.hash);
+  F.Pubsub.publish("onpopstate", location.hash);
 };
 

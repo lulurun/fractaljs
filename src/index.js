@@ -1,30 +1,31 @@
-import {define, build} from './component'
+import {defineComponent, build} from './component'
 import Config from './config'
-import Router from './router'
 
 export default {
-  component: define,
-  Router: Router,
-  init: function(options) {
-    for (let k in Config) {
-      if (options[k]) Config[k] = options[k];
+  init: function(templateEngine, dynamicRequire, pubsub) {
+    // template engine
+    if (templateEngine) {
+      if (templateEngine.compile)
+        Config.compile = templateEngine.compile;
+      Config.render = templateEngine.render;
     }
-
-    if (options.$) {
-      options.$.event.special.destroyed = {
-        remove: function(o) {
-          if (o.handler) {
-            o.handler()
-          }
-        }
-      }
+    // dynamic require
+    if (dynamicRequire) {
+      ['component', 'template'].forEach(v => {
+        if (v in dynamicRequire)
+          Config.dynamicRequire[v] = dynamicRequire[v];
+      });
+    }
+    // pubsub
+    if (pubsub) {
+      ['publish', 'subscribe', 'unsubscribe'].forEach(v => {
+        if (v in pubsub)
+          Config.Pubsub[v] = pubsub[v];
+      });
     }
   },
-  build: function($root, cb) {
-    build($root, {}, function(){
-      if (cb) cb();
-    });
-  },
+  build: build,
   Pubsub: Config.Pubsub,
+  component: defineComponent,
 }
 

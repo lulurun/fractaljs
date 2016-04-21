@@ -6,9 +6,8 @@
   "scripts": {
     "build": "node build.js",
     "build-all": "npm run build; npm run build-examples",
-    "build-examples": "npm run webpack-umd; npm run webpack-cjs",
-    "webpack-umd": "pushd ./examples; webpack --config webpack.umd.js",
-    "webpack-cjs": "pushd ./examples; webpack --config webpack.cjs.js"
+    "build-examples": "npm run webpack",
+    "webpack": "pushd ./examples; webpack; popd;"
   },
   "keywords": [
     "component",

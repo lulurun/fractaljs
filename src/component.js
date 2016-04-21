@@ -2,34 +2,73 @@ import Class from './class'
 import Config from './config'
 
 const COMPONENT_ATTR = 'f-component'
+const RENDERED_ATTR = 'f-rendered'
+let knownComponents = {}
+
+function hasClass(el, className) {
+  if (el.classList)
+    el.classList.contains(className);
+  else
+    new RegExp('(^| )' + className + '( |$)', 'gi').test(el.className);
+}
+
+function addClass(el, className) {
+  if (el.classList)
+    el.classList.add(className);
+  else
+    el.className += ' ' + className;
+}
 
 export const Component = Class.extend({
-  init: function(name, $container) {
+  init: function(name, el, parent) {
     this.name = name;
-    this.$container = $container;
+    this.el = el;
     this.complete = false;
     this.subTokens = {};
-    this.$ = this.$container.find.bind(this.$container);
-    this.$container.on('destroyed', this.destroyed.bind(this));
-
-    if (!this.template) {
+    if (this.name && !this.template)
       this.template = getTemplate(this.templateName || this.name);
-    }
+    this.parent = parent;
+    this.children = [];
   },
   getData: function(cb, param) {
     cb(this.data || {});
   },
   render: function(data, template, param) {
-    this.$container.html(Config.render(template, data));
+    this.el.innerHTML = Config.render(template, data);
+    this.children.forEach(c => {
+      c.destroyed(param);
+    });
+    this.children = [];
   },
   rendered: function(param){},
   loadChildren: function(cb, param) {
-    build(this.$container, param, cb);
+    let els = this.el.querySelectorAll('[' + COMPONENT_ATTR + ']');
+    if (!els || !els.length)
+      return cb();
+    let len = els.length;
+
+    let nbComplete = 0;
+    Array.prototype.forEach.call(els, (el, i) => {
+      let name = el.getAttribute(COMPONENT_ATTR);
+      console.debug("found component:", name);
+      let Class = getComponent(name);
+      let c = new Class(name, el, this);
+      this.children.push(c);
+      c.load(param, () => {
+        if (++nbComplete === len)
+          cb();
+      });
+    });
   },
   loaded: function(param){},
   destroyed: function(param){
+    this.children.forEach(c => {
+      c.destroyed(param);
+    });
+    this.children = [];
     console.debug(this.name, "destroyed");
-    for (var topic in this.subTokens) Config.Pubsub.unsubscribe(this.subTokens[topic]);
+    for (let topic in this.subTokens)
+      Config.Pubsub.unsubscribe(this.subTokens[topic]);
   },
   // main entry
   load: function(param, cb) {
@@ -43,7 +82,8 @@ export const Component = Class.extend({
         this.complete = true;
         console.timeEnd('Component.' + this.name);
         this.loaded(param);
-        this.$container.removeAttr(COMPONENT_ATTR);
+        if (!hasClass(this.el, RENDERED_ATTR))
+          addClass(this.el, RENDERED_ATTR);
       }, param)
     }, param)
   },
@@ -56,28 +96,19 @@ export const Component = Class.extend({
   },
 });
 
-export function build($root, param, cb){
-  let els = $root.find('[' + COMPONENT_ATTR + ']');
-  if (!els.length) return cb();
-
-  let complete = 0;
-  els.each((i, el) => {
-    let $container = Config.$(el);
-    let name = $container.attr(COMPONENT_ATTR);
-    let Class = getComponent(name);
-    let c = new Class(name, $container);
-    c.load(param, () => {
-      if (++complete === len) cb();
-    });
-  });
+export function build(param, cb){
+  let c = new Component('', window.document, null);
+  c.loadChildren(() => {
+    if (cb)
+      cb();
+  }, param || {});
 }
 
 function getTemplate(name) {
-  let template = Config.require.template("./" + name + ".html");
+  let template = Config.dynamicRequire.template("./" + name + ".html");
   if (template) {
-    if (Config.compile) {
+    if (Config.compile)
       template = Config.compile(template);
-    }
     return template;
   }
   console.error("Template not found: " + name);
@@ -85,18 +116,21 @@ function getTemplate(name) {
 }
 
 function getComponent(name) {
-  let Class = Config.require.component("./" + name);
+  if (name in knownComponents)
+    return knownComponents[name];
+  let Class = Config.dynamicRequire.component("./" + name);
   if (Class) {
-    // knownComponents[name] = Class;
+    knownComponents[name] = Class;
     return Class;
   }
   console.error("Component not found: " + name);
   return Component;
 }
 
-export function define(name, props, base) {
-  var c = (base || Component).extend(props || {});
-  // knownComponents[name] = c;
+export function defineComponent(name, props, base) {
+  let c = (base || Component).extend(props || {});
+  if (name)
+    knownComponents[name] = c;
   return c;
 }
 
