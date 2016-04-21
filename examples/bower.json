@@ -20,5 +20,8 @@
     "marked": "^0.3.5",
     "databind": "^0.4.1",
     "mustache.js": "mustache#^2.2.1"
+  },
+  "devDependencies": {
+    "jquery": "^2.2.3"
   }
 }

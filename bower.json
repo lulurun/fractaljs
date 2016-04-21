@@ -2,7 +2,7 @@
   "name": "FractalJS",
   "version": "2.0.0",
   "description": "Simple javascript framework for building component-based Web UI",
-  "main": "src/fractal.cjs.js",
+  "main": "src/fractal.js",
   "keywords": [
     "component",
     "es2015",
