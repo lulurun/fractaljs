@@ -15,13 +15,11 @@
     "test",
     "tests"
   ],
-  "dependencies": {
+  "devDependencies": {
+    "jquery": "^2.2.3",
     "bootstrap": "^3.3.6",
     "marked": "^0.3.5",
     "databind": "^0.4.1",
     "mustache.js": "mustache#^2.2.1"
-  },
-  "devDependencies": {
-    "jquery": "^2.2.3"
   }
 }

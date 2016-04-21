@@ -1,4 +1,4 @@
-var Mustache = require('mustache');
+var Mustache = require('mustache.js');
 
 F.init(Mustache, {
   component: require.context('./component', true),

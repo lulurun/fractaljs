@@ -24,11 +24,14 @@ module.exports = {
   resolve: {
     root: [ path.join(__dirname, "bower_components") ],
   },
-  // plugins: [
-  //   new webpack.ProvidePlugin({
-  //     F: __dirname + "/../dist/fractal.js",
-  //   })
-  // ],
+  plugins: [
+    new webpack.ResolverPlugin(
+      new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin(".bower.json", ["main"])
+    ),
+    //   new webpack.ProvidePlugin({
+    //     F: __dirname + "/../dist/fractal.js",
+    //   })
+  ],
   devtool: 'source-map'
 }
 
