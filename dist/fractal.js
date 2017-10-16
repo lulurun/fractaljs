@@ -369,18 +369,27 @@ function createComponent(name, def) {
 
       var _this = possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, name, el, parent));
 
-      if (def.template) {
-        _this.template = def.template;
+      for (var k in def) {
+        if (typeof def[k] === 'function') {
+          _this[k] = def[k].bind(_this);
+        } else {
+          _this[k] = def[k];
+        }
       }
-      if (def.init) {
-        def.init.bind(_this)();
-      }
-      if (def.getData) {
-        _this.getData = def.getData.bind(_this);
-      }
-      if (def.rendered) {
-        _this.rendered = def.rendered.bind(_this);
-      }
+      if (_this.init) _this.init();
+      //
+      // if (def.template) {
+      //   this.template = def.template;
+      // }
+      // if (def.init) {
+      //   def.init.bind(this)();
+      // }
+      // if (def.getData) {
+      //   this.getData = def.getData.bind(this);
+      // }
+      // if (def.rendered) {
+      //   this.rendered = def.rendered.bind(this);
+      // }
       return _this;
     }
 

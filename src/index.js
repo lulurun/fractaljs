@@ -5,18 +5,14 @@ function createComponent(name, def) {
   registerComponent(name, class extends Component {
     constructor(name, el, parent) {
       super(name, el, parent);
-      if (def.template) {
-        this.template = def.template;
+      for (const k in def) {
+        if (typeof def[k] === 'function') {
+          this[k] = def[k].bind(this);
+        } else {
+          this[k] = def[k];
+        }
       }
-      if (def.init) {
-        def.init.bind(this)();
-      }
-      if (def.getData) {
-        this.getData = def.getData.bind(this);
-      }
-      if (def.rendered) {
-        this.rendered = def.rendered.bind(this);
-      }
+      if (this.init) this.init();
     }
   });
 }
