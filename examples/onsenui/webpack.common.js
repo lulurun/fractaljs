@@ -27,11 +27,19 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['env']
+            presets: ['env'],
           }
         }
       },
-      { test: /\.html$/, use: 'handlebars-loader' },
+      {
+        test: /\.html$/,
+        use: [ {
+          loader: 'html-loader',
+          options: {
+            // minimize: true
+          }
+        }]
+      },
       {
         test: /\.css$/,
         use: [ 'style-loader', 'css-loader' ]

@@ -1,3 +1,1 @@
-F.component('animations', {
-  template: require('./animations.html')
-});
+F.component('animations', {}, 'base');

@@ -1,3 +1,1 @@
-F.component('home', {
-  template: require('./home.html')
-});
+F.component('home', {}, 'base');

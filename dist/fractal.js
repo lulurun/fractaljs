@@ -251,12 +251,9 @@ var Component = function () {
     }
   }, {
     key: 'render',
-    value: function render(data, template, param) {
+    value: function render(data, template, cb, param) {
       this.el.innerHTML = template(data);
-      this.children.forEach(function (c) {
-        c.destroyed(param);
-      });
-      this.children = [];
+      cb();
     }
   }, {
     key: 'loadChildren',
@@ -314,14 +311,18 @@ var Component = function () {
       this.complete = false;
       this.getData(function (data) {
         console.log(_this2.name, data);
-        var template = _this2.template || require('./' + (_this2.templateName || _this2.name) + '.tmpl');
-        _this2.render(data, template, param);
-        _this2.rendered(function () {
-          _this2.loadChildren(function () {
-            _this2.complete = true;
-            console.timeEnd('Component.' + _this2.name);
-            _this2.loaded(param);
-            if (cb) cb();
+        _this2.render(data, _this2.template, function () {
+          _this2.children.forEach(function (c) {
+            c.destroyed(param);
+          });
+          _this2.children = [];
+          _this2.rendered(function () {
+            _this2.loadChildren(function () {
+              _this2.complete = true;
+              console.timeEnd('Component.' + _this2.name);
+              _this2.loaded(param);
+              if (cb) cb();
+            }, param);
           }, param);
         }, param);
       }, param);
@@ -356,45 +357,32 @@ function build(el, param) {
   root.loadChildren(function () {}, param);
 }
 
-function registerComponent(name, component) {
-  knownComponents[name] = component;
-}
+function createComponent(name, def, base) {
+  var baseClass = base ? knownComponents[base] : Component;
+  var c = function (_baseClass) {
+    inherits(c, _baseClass);
 
-function createComponent(name, def) {
-  registerComponent(name, function (_Component) {
-    inherits(_class, _Component);
+    function c(name, el, parent) {
+      classCallCheck(this, c);
 
-    function _class(name, el, parent) {
-      classCallCheck(this, _class);
-
-      var _this = possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, name, el, parent));
+      var _this4 = possibleConstructorReturn(this, (c.__proto__ || Object.getPrototypeOf(c)).call(this, name, el, parent));
 
       for (var k in def) {
+        if (k === 'init') continue;
         if (typeof def[k] === 'function') {
-          _this[k] = def[k].bind(_this);
+          _this4[k] = def[k].bind(_this4);
         } else {
-          _this[k] = def[k];
+          _this4[k] = def[k];
         }
       }
-      if (_this.init) _this.init();
-      //
-      // if (def.template) {
-      //   this.template = def.template;
-      // }
-      // if (def.init) {
-      //   def.init.bind(this)();
-      // }
-      // if (def.getData) {
-      //   this.getData = def.getData.bind(this);
-      // }
-      // if (def.rendered) {
-      //   this.rendered = def.rendered.bind(this);
-      // }
-      return _this;
+      if (def.init) def.init.bind(_this4)();
+      return _this4;
     }
 
-    return _class;
-  }(Component));
+    return c;
+  }(baseClass);
+  knownComponents[name] = c;
+  return c;
 }
 
 window.onpopstate = function () {
@@ -403,7 +391,8 @@ window.onpopstate = function () {
 
 var index = {
   build: build,
-  component: createComponent
+  component: createComponent,
+  Component: Component
 };
 
 return index;

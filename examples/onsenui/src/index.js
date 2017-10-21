@@ -1,3 +1,4 @@
+import './component/base'
 import './component/app'
 import './component/side'
 import './component/tabbar'

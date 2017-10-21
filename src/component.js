@@ -17,12 +17,9 @@ export class Component {
     cb(this.data || {});
   }
 
-  render(data, template, param) {
+  render(data, template, cb, param) {
     this.el.innerHTML = template(data);
-    this.children.forEach(c => {
-      c.destroyed(param);
-    });
-    this.children = [];
+    cb();
   }
 
   loadChildren(cb, param) {
@@ -69,15 +66,19 @@ export class Component {
     this.complete = false;
     this.getData(data => {
       console.log(this.name, data);
-      const template = this.template || require('./' + (this.templateName || this.name) + '.tmpl');
-      this.render(data, template, param);
-      this.rendered(() => {
-        this.loadChildren(() => {
-          this.complete = true;
-          console.timeEnd('Component.' + this.name);
-          this.loaded(param);
-          if (cb) cb();
-        }, param)
+      this.render(data, this.template, () => {
+        this.children.forEach(c => {
+          c.destroyed(param);
+        });
+        this.children = [];
+        this.rendered(() => {
+          this.loadChildren(() => {
+            this.complete = true;
+            console.timeEnd('Component.' + this.name);
+            this.loaded(param);
+            if (cb) cb();
+          }, param)
+        }, param);
       }, param);
     }, param)
   }
@@ -102,6 +103,22 @@ export function build(el, param) {
   root.loadChildren(() => {}, param);
 }
 
-export function registerComponent(name, component) {
-  knownComponents[name] = component;
+export function createComponent(name, def, base) {
+  const baseClass = base ? knownComponents[base] : Component;
+  const c = class extends baseClass {
+    constructor(name, el, parent) {
+      super(name, el, parent);
+      for (const k in def) {
+        if (k === 'init') continue;
+        if (typeof def[k] === 'function') {
+          this[k] = def[k].bind(this);
+        } else {
+          this[k] = def[k];
+        }
+      }
+      if (def.init) def.init.bind(this)();
+    }
+  };
+  knownComponents[name] = c;
+  return c;
 }

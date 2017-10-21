@@ -6,6 +6,7 @@ const tabs = [
 
 F.component('tabbar', {
   data: {
+    title: 'HOME',
     tabs: tabs
   },
   showTab: function(hash){
@@ -23,25 +24,25 @@ F.component('tabbar', {
       this.showTab(hash);
     });
   },
-  template: require('./tabbar.html'),
+  loaded: function(cb, param) {
+    this.showTab(location.hash);
+  },
   rendered: function(cb, param) {
     this.$tabbar = this.el.querySelector('#appTabbar');
     this.$tabbar.addEventListener('init', event => {
-      this.loadChildren()
-      this.showTab(location.hash);
-    });
-    this.$tabbar.addEventListener('prechange', event => {
-      this.el.querySelector('ons-toolbar .center').innerHTML = event.tabItem.getAttribute('label');
-    });
-    this.$tabbar.addEventListener('postchange', event => {
-      if (event.index !== this.currentIndex) {
-        history.pushState(null, null, '#/tabbar/' + tabs[event.index].name);
-        this.currentIndex = event.index;
+      this.$tabbar.addEventListener('prechange', event => {
+        this.update({title: event.tabItem.getAttribute('label')});
+      });
+      this.$tabbar.addEventListener('postchange', event => {
+        if (event.index !== this.currentIndex) {
+          history.pushState(null, null, '#/tabbar/' + tabs[event.index].name);
+          this.currentIndex = event.index;
+        }
+      });
+      this.el.querySelector('#appTabbarBtn').onclick = () => {
+        this.publish("appSplitter.toggle");
       }
+      cb();
     });
-    this.el.querySelector('#appTabbarBtn').onclick = () => {
-      this.publish("appSplitter.toggle");
-    }
-    cb();
   }
-});
+}, 'base');

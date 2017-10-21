@@ -1,3 +1,1 @@
-F.component('forms', {
-  template: require('./forms.html')
-});
+F.component('forms', {}, 'base');
