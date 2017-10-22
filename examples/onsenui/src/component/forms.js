@@ -1,1 +1,1 @@
-F.component('forms', {}, 'base');
+F.component('forms', {}, 'Base');

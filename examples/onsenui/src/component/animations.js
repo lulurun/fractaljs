@@ -1,1 +1,1 @@
-F.component('animations', {}, 'base');
+F.component('animations', {}, 'Base');

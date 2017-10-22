@@ -29,20 +29,27 @@ F.component('tabbar', {
   },
   rendered: function(cb, param) {
     this.$tabbar = this.el.querySelector('#appTabbar');
-    this.$tabbar.addEventListener('init', event => {
-      this.$tabbar.addEventListener('prechange', event => {
-        this.update({title: event.tabItem.getAttribute('label')});
-      });
-      this.$tabbar.addEventListener('postchange', event => {
-        if (event.index !== this.currentIndex) {
-          history.pushState(null, null, '#/tabbar/' + tabs[event.index].name);
-          this.currentIndex = event.index;
+    (() => {
+      let count = 0;
+      this.$tabbar.addEventListener('init', event => {
+        console.log('================================== tabbar init', event);
+        if (++count === tabs.length) {
+          cb();
         }
       });
-      this.el.querySelector('#appTabbarBtn').onclick = () => {
-        this.publish("appSplitter.toggle");
-      }
-      cb();
+    })();
+    this.$tabbar.addEventListener('prechange', event => {
+      this.update({title: event.tabItem.getAttribute('label')});
+      // this.el.querySelector('ons-toolbar .center').innerHTML = event.tabItem.getAttribute('label');
     });
+    this.$tabbar.addEventListener('postchange', event => {
+      if (event.index !== this.currentIndex) {
+        history.pushState(null, null, '#/tabbar/' + tabs[event.index].name);
+        this.currentIndex = event.index;
+      }
+    });
+    this.el.querySelector('#appTabbarBtn').onclick = () => {
+      this.publish("appSplitter.toggle");
+    }
   }
-}, 'base');
+}, 'Base');
