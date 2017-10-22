@@ -42,6 +42,7 @@ F.component('app', {
 }, 'Base');
 
 for (let i in config.HOME) {
+  if (i === 'pull_hook') continue;
   F.component(i, {
     template: '<h1>' + i + '</h1>',
   }, 'Base');

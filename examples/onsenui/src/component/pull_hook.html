@@ -1,1 +1,25 @@
-pull hook
+<ons-pull-hook threshold-height="120px">
+  {{#state}}
+  <ons-icon size="22px" class="pull-hook-content"
+    icon="{{icon}}" {{#spin}}spin{{/spin}}></ons-icon>
+  {{/state}}
+</ons-pull-hook>
+
+<ons-list>
+  <ons-list-header>Pull to refresh</ons-list-header>
+  {{#items}}
+  <ons-list-item>
+    <div class="left">
+      <img class="list-item__thumbnail" src="{{url}}">
+    </div>
+    <div class="center">{{name}}</div>
+  </ons-list-item>
+  {{/items}}
+</ons-list>
+
+<style>
+  .pull-hook-content {
+    color: #666;
+    transition: transform .25s ease-in-out;
+  }
+</style>
