@@ -2,13 +2,13 @@
   <ons-toolbar>
     <div class="center">{{title}}</div>
     <div class="right">
-      <ons-toolbar-button id="appTabbarBtn">
+      <ons-toolbar-button id="menuBtn">
         <ons-icon icon="ion-navicon, material:md-menu"></ons-icon>
       </ons-toolbar-button>
     </div>
   </ons-toolbar>
 
-  <ons-tabbar id="appTabbar" swipeables position="auto">
+  <ons-tabbar swipeables position="auto">
     {{#tabs}}
     <ons-tab label="{{label}}" page="{{name}}.html" icon="{{icon}}"></ons-tab>
     {{/tabs}}

@@ -1,5 +1,17 @@
 <ons-page f-component="main"></ons-page>
 
-<!-- <template id="pull_hook">
-  <ons-page f-component="pull_hook"></ons-page>
-</template> -->
+{{#pages}}
+<template id="{{name}}">
+  <ons-page>
+    {{#toolbar}}
+    <ons-toolbar>
+      <div class="left">
+        <ons-back-button>{{back}}</ons-back-button>
+      </div>
+      <div class="center">{{title}}</div>
+    </ons-toolbar>
+    {{/toolbar}}
+    <div f-component="{{name}}" />
+  </ons-page>
+</template>
+{{/pages}}

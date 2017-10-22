@@ -251,9 +251,18 @@ var Component = function () {
     }
   }, {
     key: 'render',
-    value: function render(data, template, cb, param) {
-      this.el.innerHTML = template(data);
+    value: function render(data, cb, param) {
+      this.el.innerHTML = this.template(data);
       cb();
+    }
+  }, {
+    key: 'addChild',
+    value: function addChild(name, el, cb, param) {
+      console.log("add child:", name);
+      var Class = knownComponents[name];
+      var c = new Class(name, el, this);
+      this.children.push(c);
+      c.load(param, cb);
     }
   }, {
     key: 'loadChildren',
@@ -270,11 +279,7 @@ var Component = function () {
       var nbComplete = 0;
       Array.prototype.forEach.call(els, function (el, i) {
         var name = el.getAttribute(COMPONENT_ATTR);
-        console.log("load component:", name);
-        var Class = knownComponents[name];
-        var c = new Class(name, el, _this);
-        _this.children.push(c);
-        c.load(param, function () {
+        _this.addChild(name, el, function () {
           if (++nbComplete === len) {
             if (cb) cb();
           }
@@ -310,8 +315,7 @@ var Component = function () {
       console.time('Component.' + this.name);
       this.complete = false;
       this.getData(function (data) {
-        console.log(_this2.name, data);
-        _this2.render(data, _this2.template, function () {
+        _this2.render(data, function () {
           _this2.children.forEach(function (c) {
             c.destroyed(param);
           });

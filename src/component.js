@@ -17,9 +17,17 @@ export class Component {
     cb(this.data || {});
   }
 
-  render(data, template, cb, param) {
-    this.el.innerHTML = template(data);
+  render(data, cb, param) {
+    this.el.innerHTML = this.template(data);
     cb();
+  }
+
+  addChild(name, el, cb, param) {
+    console.log("add child:", name);
+    const Class = knownComponents[name];
+    const c = new Class(name, el, this);
+    this.children.push(c);
+    c.load(param, cb);
   }
 
   loadChildren(cb, param) {
@@ -33,11 +41,7 @@ export class Component {
     let nbComplete = 0;
     Array.prototype.forEach.call(els, (el, i) => {
       const name = el.getAttribute(COMPONENT_ATTR);
-      console.log("load component:", name);
-      const Class = knownComponents[name];
-      const c = new Class(name, el, this);
-      this.children.push(c);
-      c.load(param, () => {
+      this.addChild(name, el, () => {
         if (++nbComplete === len) {
           if (cb) cb();
         }
@@ -65,8 +69,7 @@ export class Component {
     console.time('Component.' + this.name);
     this.complete = false;
     this.getData(data => {
-      console.log(this.name, data);
-      this.render(data, this.template, () => {
+      this.render(data, () => {
         this.children.forEach(c => {
           c.destroyed(param);
         });
