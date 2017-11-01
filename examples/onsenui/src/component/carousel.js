@@ -10,14 +10,6 @@ F.component('carousel', {
     this.carousel.setActiveIndex(num);
   },
   rendered: function(cb){
-    this.el.querySelectorAll('*[f-onclick]').forEach(n => {
-      n.onclick = () => {
-        (() => {
-          eval('this.' + n.getAttribute('f-onclick'));
-        }).call(this);
-      }
-    });
-
     const carousel = this.carousel = this.el.querySelector('#carousel');
     carousel.addEventListener('postchange', () => {
       var index = carousel.getActiveIndex();
