@@ -1,12 +1,12 @@
 const tabs = [
-  { name: 'home', label: 'HOME', icon: 'ion-home' },
-  { name: 'forms', label: 'FORMS', icon: 'ion-edit' },
-  { name: 'animations', label: 'ANIMATIONS', icon: 'ion-film-marker' },
+  { name: 'home', label: 'Home', icon: 'ion-home' },
+  { name: 'forms', label: 'Forms', icon: 'ion-edit' },
+  { name: 'animations', label: 'Animations', icon: 'ion-film-marker' },
 ];
 
 F.component('tab', {
   data: {
-    title: 'HOME',
+    title: 'Home',
     tabs: tabs
   },
   showTab: function(hash){

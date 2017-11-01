@@ -1,0 +1,2 @@
+F.component('buttons', {
+}, 'Base');

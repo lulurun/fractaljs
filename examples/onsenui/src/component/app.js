@@ -1,5 +1,5 @@
 const config = {
-  HOME: {
+  Home: {
     pull_hook: 'PullHook',
     dialogs: 'Dialogs',
     buttons: 'Buttons',
@@ -43,6 +43,9 @@ F.component('app', {
 
 for (let i in config.HOME) {
   if (i === 'pull_hook') continue;
+  if (i === 'dialogs') continue;
+  if (i === 'buttons') continue;
+  if (i === 'carousel') continue;
   F.component(i, {
     template: '<h1>' + i + '</h1>',
   }, 'Base');

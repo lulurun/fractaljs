@@ -58,6 +58,5 @@ F.component('pull_hook', {
     pullHook.addEventListener('changestate', ev => {
       this.update({state: pullHookIconStates[ev.state]});
     });
-
   },
 }, 'Base');

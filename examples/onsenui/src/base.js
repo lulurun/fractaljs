@@ -14,7 +14,7 @@ F.component('Base', {
     if (!this.template)
       this.template = require('./component/' + this.name + '.html');
     if (this.el.tagName === 'ONS-PAGE') {
-      let el = this.el.querySelector('.page__content');
+      const el = this.el.querySelector('.page__content');
       if (!el) {
         this.el.addEventListener('init', ev => {
           if (ev.target === this.el) {
@@ -30,7 +30,7 @@ F.component('Base', {
     }
   },
   update: function(data) {
-    for (const i in data) {
+    for (let i in data) {
       this.ractive.set(i, data[i]);
     }
   }
