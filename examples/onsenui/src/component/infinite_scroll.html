@@ -1,0 +1,11 @@
+<ons-tabbar position="auto">
+  {{#tabs}}
+  <ons-tab label="{{label}}" page="{{name}}.html"></ons-tab>
+  {{/tabs}}
+</ons-tabbar>
+
+{{#tabs}}
+<template id="{{name}}.html">
+  <ons-page f-component="{{name}}"></ons-page>
+</template>
+{{/tabs}}

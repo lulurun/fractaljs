@@ -10,5 +10,8 @@ import './component/pull_hook'
 import './component/dialogs'
 import './component/buttons'
 import './component/carousel'
+import './component/infinite_scroll'
+import './component/load_more'
+import './component/lazy_repeat'
 
 F.build(document.body);

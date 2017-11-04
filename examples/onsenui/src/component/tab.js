@@ -30,7 +30,6 @@ F.component('tab', {
     (() => {
       let count = 0;
       this.$tab.addEventListener('init', ev => {
-        console.log('================================== tab init', ev);
         if (++count === tabs.length) {
           cb();
         }

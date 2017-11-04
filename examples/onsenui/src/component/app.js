@@ -46,6 +46,7 @@ for (let i in config.HOME) {
   if (i === 'dialogs') continue;
   if (i === 'buttons') continue;
   if (i === 'carousel') continue;
+  if (i === 'infinite_scroll') continue;
   F.component(i, {
     template: '<h1>' + i + '</h1>',
   }, 'Base');
