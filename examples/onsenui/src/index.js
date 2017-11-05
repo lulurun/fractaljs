@@ -13,5 +13,6 @@ import './component/carousel'
 import './component/infinite_scroll'
 import './component/load_more'
 import './component/lazy_repeat'
+import './component/progress'
 
 F.build(document.body);

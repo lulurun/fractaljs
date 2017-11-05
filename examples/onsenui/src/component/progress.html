@@ -1,0 +1,73 @@
+<div class="progress-bar">
+  <div class="progress-bar__primary" style="width: {{progress}}%"></div>
+</div>
+
+<section style="margin: 40px 16px">
+  <p id="progress-status">
+    Progress: {{progress}}%
+  </p>
+
+  <div class="progress-bar">
+    <div class="progress-bar__primary" style="width: 20%"></div>
+  </div>
+
+  <p/>
+
+  <div class="progress-bar">
+    <div class="progress-bar__primary" style="width:40%"></div>
+    <div class="progress-bar__secondary" style="width:80%"></div>
+  </div>
+
+  <p/>
+
+  <div class="progress-bar progress-bar--indeterminate"></div>
+
+  <p/>
+
+  <div style="text-align: center; margin: 40px; color: #666">
+    <p>
+      <svg class="progress-circular">
+        <circle class="progress-circular__background"/>
+        <circle class="progress-circular__primary" style="stroke-dasharray: 51%, 251.32%"/>
+      </svg>
+
+      <svg class="progress-circular">
+        <circle class="progress-circular__background"/>
+        <circle class="progress-circular__secondary" style="stroke-dasharray: 202%, 251.32%"/>
+        <circle class="progress-circular__primary" style="stroke-dasharray: 101%, 251.32%"/>
+      </svg>
+
+      <svg class="progress-circular progress-circular--indeterminate">
+        <circle class="progress-circular__background"/>
+        <circle class="progress-circular__primary progress-circular--indeterminate__primary"/>
+        <circle class="progress-circular__secondary progress-circular--indeterminate__secondary"/>
+      </svg>
+    </p>
+
+    <p>
+      <ons-icon icon="ion-load-a" spin size="30px"></ons-icon>
+      <ons-icon icon="ion-load-b" spin size="30px"></ons-icon>
+      <ons-icon icon="ion-load-c" spin size="30px"></ons-icon>
+      <ons-icon icon="ion-load-d" spin size="30px"></ons-icon>
+    </p>
+
+    <p>
+      <ons-icon icon="fa-spinner" spin size="26px"></ons-icon>
+      <ons-icon icon="circle-o-notch" spin size="26px"></ons-icon>
+    </p>
+
+    <p>
+      <ons-icon icon="md-spinner" spin size="30px"></ons-icon>
+    </p>
+  </div>
+
+  <p>
+    <ons-button modifier="large">
+      <ons-icon icon="ion-load-c" spin size="26px"></ons-icon>
+    </ons-button>
+    <br><br>
+    <ons-button modifier="large" disabled>
+      <ons-icon icon="ion-load-c" spin size="26px"></ons-icon>
+    </ons-button>
+  </p>
+</section>
