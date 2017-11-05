@@ -1,1 +1,156 @@
-<h1>FORMS</h1>
+<ons-list>
+  <ons-list-header>Text input</ons-list-header>
+  <ons-list-item class="input-items">
+    <div class="left">
+      <ons-icon icon="md-face" class="list-item__icon"></ons-icon>
+    </div>
+    <label class="center">
+    <input type="text" class="text-input" maxlength="20" placeholder="Name" value="{{text_input_value}}">
+  </label>
+  </ons-list-item>
+  <ons-list-item class="input-items">
+    <div class="left">
+      <ons-icon icon="fa-question-circle-o" class="list-item__icon"></ons-icon>
+    </div>
+    <label class="center">
+    <input type="search" class="search-input" maxlength="20" placeholder="Search" value="{{text_input_value}}">
+  </label>
+  </ons-list-item>
+  <ons-list-item>
+    <div class="right right-label">
+      <span id="name-display">Hello anonymous! {{text_input_value}}</span>
+      <ons-icon icon="fa-hand-spock-o" size="lg" class="right-icon"></ons-icon>
+    </div>
+  </ons-list-item>
+
+  <ons-list-header>Switches</ons-list-header>
+  <ons-list-item>
+    <label class="center" for="switch1">
+      Switch<span id="switch-status">&nbsp;({{#switches_value}}on{{/switches_value}}{{^switches_value}}off{{/switches_value}})</span>
+    </label>
+    <div class="right">
+      <label class="switch">
+        <input type="checkbox" class="switch__input" checked="{{switches_value}}">
+        <div class="switch__toggle">
+          <div class="switch__handle"></div>
+        </div>
+      </label>
+    </div>
+  </ons-list-item>
+  <ons-list-item>
+    <label id="enabled-label" class="center" for="switch2">
+      {{#switches_value}}Enabled{{/switches_value}}{{^switches_value}}Disabled{{/switches_value}} switch
+    </label>
+    <div class="right">
+      <label class="switch">
+        <input type="checkbox" class="switch__input" {{^switches_value}}disabled{{/switches_value}}>
+        <div class="switch__toggle">
+          <div class="switch__handle"></div>
+        </div>
+      </label>
+    </div>
+  </ons-list-item>
+
+  <ons-list-header>Select</ons-list-header>
+  <ons-list-item>
+    <div class="center">
+      <select class="select-input" value="{{select_value}}">
+        <option value="FractalJS">FractalJS</option>
+        <option value="Vue">Vue</option>
+        <option value="React">React</option>
+        <option value="Angular">Angular</option>
+      </select>
+    </div>
+    <div class="right right-label">
+      <span id="awesome-platform">{{select_value}}&nbsp;</span>is awesome!
+    </div>
+  </ons-list-item>
+
+  <ons-list-header>Radio buttons</ons-list-header>
+  <ons-list-item tappable>
+    <label class="left list-item__left">
+      <input type="radio" class="radio-button__input" id="radio-0" value="Apples" name="{{radio_value}}">
+      <span class="radio-button__checkmark"></span>
+    </label>
+    <label for="radio-0" class="center list-item__center">Apples</label>
+  </ons-list-item>
+  <ons-list-item tappable>
+    <label class="left list-item__left">
+      <input type="radio" class="radio-button__input" id="radio-1" value="Bananas" name="{{radio_value}}">
+      <span class="radio-button__checkmark"></span>
+    </label>
+    <label for="radio-1" class="center list-item__center">Bananas</label>
+  </ons-list-item>
+  <ons-list-item tappable modifier="longdivider">
+    <label class="left list-item__left">
+      <input type="radio" class="radio-button__input" id="radio-2" value="Oranges" name="{{radio_value}}">
+      <span class="radio-button__checkmark"></span>
+    </label>
+    <label for="radio-2" class="center list-item__center">Oranges</label>
+  </ons-list-item>
+  <ons-list-item>
+    <div id="fruit-love" class="center">
+      I love {{radio_value}}!
+    </div>
+  </ons-list-item>
+
+  <ons-list-header>Checkboxes - <span id="checkboxes-header">{{checkbox_value}}</span></ons-list-header>
+  <ons-list-item tappable="" class="list-item">
+    <label class="left list-item__left">
+      <input type="checkbox" class="checkbox__input" id="checkbox-0" value="RED" name="{{checkbox_value}}">
+      <span class="checkbox__checkmark"></span>
+    </label>
+    <label class="center list-item__center" for="checkbox-0">
+      Red
+    </label>
+  </ons-list-item>
+  <ons-list-item tappable="" class="list-item">
+    <label class="left list-item__left">
+      <input type="checkbox" class="checkbox__input" id="checkbox-0" value="GREEN" name="{{checkbox_value}}">
+      <span class="checkbox__checkmark"></span>
+    </label>
+    <label class="center list-item__center" for="checkbox-0">
+      Green
+    </label>
+  </ons-list-item>
+  <ons-list-item tappable="" class="list-item">
+    <label class="left list-item__left">
+      <input type="checkbox" class="checkbox__input" id="checkbox-0" value="BLUE" name="{{checkbox_value}}">
+      <span class="checkbox__checkmark"></span>
+    </label>
+    <label class="center list-item__center" for="checkbox-0">
+      Blue
+    </label>
+  </ons-list-item>
+
+  <ons-list-header>Range slider</ons-list-header>
+  <ons-list-item>
+    Adjust the volume:
+    <ons-row>
+      <ons-col width="40px" style="text-align: center; line-height: 31px;">
+        <ons-icon icon="md-volume-down"></ons-icon>
+      </ons-col>
+      <ons-col>
+        <ons-range id="range-slider" value="{{volume_value}}" style="width: 100%;" class="range">
+          <input type="range" class="range__input" value="{{volume_value}}" style="background-size: {{volume_value}}% 2px;">
+          <input type="range" class="range__focus-ring" tabindex="-1" min="" max="">
+        </ons-range>
+      </ons-col>
+      <ons-col width="40px" style="text-align: center; line-height: 31px;">
+        <ons-icon icon="md-volume-up"></ons-icon>
+      </ons-col>
+    </ons-row>
+    Volume:<span id="volume-value">&nbsp;{{volume_value}}</span>
+    <span style="display: inline-block">&nbsp;{{#volume_loud}}(careful, that's loud){{/volume_loud}}</span>
+  </ons-list-item>
+</ons-list>
+
+<style>
+  .right-icon {
+    margin-left: 10px;
+  }
+
+  .right-label {
+    color: #666;
+  }
+</style>
