@@ -1,0 +1,1 @@
+F.component('transition', {}, 'Base');

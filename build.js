@@ -5,7 +5,9 @@ var babel = require('rollup-plugin-babel')
 rollup.rollup({
   input: 'src/index.js',
   plugins: [
-    babel({}),
+    babel({
+      plugins: ['external-helpers']
+    }),
   ],
 }).then(function (bundle) {
   var file = 'dist/fractal.js';

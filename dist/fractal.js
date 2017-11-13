@@ -252,15 +252,7 @@ var Component = function () {
   }, {
     key: 'render',
     value: function render(data, cb, param) {
-      var _this = this;
-
       this.el.innerHTML = this.template(data);
-      this.el.querySelectorAll('*[f-onclick]').forEach(function (n) {
-        n.onclick = function () {
-          var f = new Function('this.' + n.getAttribute('f-onclick'));
-          f.bind(_this)();
-        };
-      });
       cb();
     }
   }, {
@@ -275,7 +267,7 @@ var Component = function () {
   }, {
     key: 'loadChildren',
     value: function loadChildren(cb, param) {
-      var _this2 = this;
+      var _this = this;
 
       var els = this.el.querySelectorAll('[' + COMPONENT_ATTR + ']');
       if (!els || !els.length) {
@@ -287,7 +279,7 @@ var Component = function () {
       var nbComplete = 0;
       Array.prototype.forEach.call(els, function (el, i) {
         var name = el.getAttribute(COMPONENT_ATTR);
-        _this2.addChild(name, el, function () {
+        _this.addChild(name, el, function () {
           if (++nbComplete === len) {
             if (cb) cb();
           }
@@ -317,22 +309,22 @@ var Component = function () {
   }, {
     key: 'load',
     value: function load(param, cb) {
-      var _this3 = this;
+      var _this2 = this;
 
       param = param || {};
       console.time('Component.' + this.name);
       this.complete = false;
       this.getData(function (data) {
-        _this3.render(data, function () {
-          _this3.children.forEach(function (c) {
+        _this2.render(data, function () {
+          _this2.children.forEach(function (c) {
             c.destroyed(param);
           });
-          _this3.children = [];
-          _this3.rendered(function () {
-            _this3.loadChildren(function () {
-              _this3.complete = true;
-              console.timeEnd('Component.' + _this3.name);
-              _this3.loaded(param);
+          _this2.children = [];
+          _this2.rendered(function () {
+            _this2.loadChildren(function () {
+              _this2.complete = true;
+              console.timeEnd('Component.' + _this2.name);
+              _this2.loaded(param);
               if (cb) cb();
             }, param);
           }, param);
@@ -377,18 +369,18 @@ function createComponent(name, def, base) {
     function c(name, el, parent) {
       classCallCheck(this, c);
 
-      var _this5 = possibleConstructorReturn(this, (c.__proto__ || Object.getPrototypeOf(c)).call(this, name, el, parent));
+      var _this4 = possibleConstructorReturn(this, (c.__proto__ || Object.getPrototypeOf(c)).call(this, name, el, parent));
 
       for (var k in def) {
         if (k === 'init') continue;
         if (typeof def[k] === 'function') {
-          _this5[k] = def[k].bind(_this5);
+          _this4[k] = def[k].bind(_this4);
         } else {
-          _this5[k] = def[k];
+          _this4[k] = def[k];
         }
       }
-      if (def.init) def.init.bind(_this5)();
-      return _this5;
+      if (def.init) def.init.bind(_this4)();
+      return _this4;
     }
 
     return c;

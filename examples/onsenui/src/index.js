@@ -14,5 +14,6 @@ import './component/infinite_scroll'
 import './component/load_more'
 import './component/lazy_repeat'
 import './component/progress'
+import './component/transition'
 
 F.build(document.body);

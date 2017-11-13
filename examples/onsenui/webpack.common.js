@@ -7,7 +7,7 @@ const distDir = 'www';
 
 module.exports = {
   entry: [
-    './src/index.js'
+    './src/index.js',
   ],
   plugins: [
     new CleanWebpackPlugin([distDir]),
@@ -28,6 +28,7 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: ['env'],
+            // plugins: ['external-helpers']
           }
         }
       },
